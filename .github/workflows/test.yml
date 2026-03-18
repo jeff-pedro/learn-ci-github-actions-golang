@@ -19,11 +19,11 @@ jobs:
     - name: Build
       run: go build -v main.go
 
-    - name: Upload main artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: main
-        path: ./
+    # - name: Upload main artifact
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: main
+    #     path: ./
 
     - name: Start app
       run: go run main
