@@ -1,3 +1,5 @@
+name: Test
+
 on:
   workflow_run:
     workflows: ["Lint"]
@@ -26,7 +28,7 @@ jobs:
     #     path: ./
 
     - name: Start app
-      run: go run main
+      run: ./main
 
     - name: Test
       run: go build -v main_test.go
