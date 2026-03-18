@@ -44,7 +44,7 @@ jobs:
     - name: Start app
       run: ./main
       env:
-        DB_HOST: postgres
+        DB_HOST: localhost
         DB_USER: root
         DB_PASSWORD: root
         DB_NAME: root
@@ -52,5 +52,3 @@ jobs:
 
     - name: Test
       run: go build -v main_test.go
-
-
