@@ -42,13 +42,16 @@ jobs:
     #     path: ./
 
     - name: Start app
-      run: ./main
+      run: ./main &
       env:
         DB_HOST: localhost
         DB_USER: root
         DB_PASSWORD: root
         DB_NAME: root
         DB_PORT: 5432
+
+    - name: Espera enquanto App fica pronto
+      run: sleep 5
 
     - name: Test
       run: go build -v main_test.go
