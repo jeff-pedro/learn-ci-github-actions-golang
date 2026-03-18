@@ -10,7 +10,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    steps:
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: root
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps: 
     - uses: actions/checkout@v4
 
     - name: Set up Go
@@ -29,6 +43,12 @@ jobs:
 
     - name: Start app
       run: ./main
+      env:
+        DB_HOST: postgres
+        DB_USER: root
+        DB_PASSWORD: root
+        DB_NAME: root
+        DB_PORT: 5432
 
     - name: Test
       run: go build -v main_test.go
