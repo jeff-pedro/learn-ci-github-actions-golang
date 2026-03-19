@@ -25,20 +25,21 @@ jobs:
         with:
           version: v2.10
           args: ./controllers ./database/ ./models ./routes
-
-      - run: echo "${{ secrets.DB_USER }}" | base64
-      - run: echo "${{ secrets.DB_PASSWORD }}" | base64
-      - run: echo "${{ secrets.DB_NAME }}" | base64
-      - run: echo "${{ secrets.DB_PORT }}" | base64
-      - run: echo "${{ secrets.DB_HOST }}" | base64
       
       - name: Teste
         run: go test -v main_test.go
         env:
           DB_HOST: localhost
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USER: root
+          DB_PASSWORD: root
+          DB_NAME: root
+          DB_PORT: 5432
+
+
+          # DB_HOST: ${{ secrets.DB_HOST }}
+          # DB_USER: ${{ secrets.DB_USER }}
+          # DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          # DB_NAME: ${{ secrets.DB_NAME }}
+          # DB_PORT: ${{ secrets.DB_PORT }}
 
         
