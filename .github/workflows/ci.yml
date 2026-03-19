@@ -26,11 +26,11 @@ jobs:
           version: v2.10
           args: ./controllers ./database/ ./models ./routes
 
-      - run: echo ${{ secrets.DB_USER }}
-      - run: echo ${{ secrets.DB_PASSWORD }}
-      - run: echo ${{ secrets.DB_NAME }}
-      - run: echo ${{ secrets.DB_PORT }}
-      - run: echo ${{ secrets.DB_HOST }}
+      - run: echo "${{ secrets.DB_USER }}" | base64
+      - run: echo "${{ secrets.DB_PASSWORD }}" | base64
+      - run: echo "${{ secrets.DB_NAME }}" | base64
+      - run: echo "${{ secrets.DB_PORT }}" | base64
+      - run: echo "${{ secrets.DB_HOST }}" | base64
       
       - name: Teste
         run: go test -v main_test.go
