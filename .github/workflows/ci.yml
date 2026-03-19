@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
+      
+      - name: Inicia Banco
+        run: docker compose up -d postgres
+
+      - name: Lint
+        run: docker run --rm -v $(pwd):/app -w /app  golangci/golangci-lint golangci-lint run controllers/ database/ models/ routes/
+
+      - name: Teste
+        run: go test -v main_test.go
