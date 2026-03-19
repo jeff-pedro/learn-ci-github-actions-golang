@@ -1,6 +1,8 @@
-name: CI
+name: Integração Contínua
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -17,9 +19,24 @@ jobs:
       
       - name: Inicia Banco
         run: docker compose up -d postgres
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
 
       - name: Lint
-        run: docker run --rm -v $(pwd):/app -w /app  golangci/golangci-lint golangci-lint run controllers/ database/ models/ routes/
-
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.10
+          args: ./controllers ./database/ ./models ./routes
+      
       - name: Teste
         run: go test -v main_test.go
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+
+        
