@@ -1,4 +1,4 @@
 pkg
 main
 postgres-data
-.env
+.env*
