@@ -29,10 +29,9 @@ jobs:
 
       - name: Executa aplicação
         run: ./main
-          env:
-            DB_HOST: ${{ secrets.RDS_HOST }} 
-            DB_USER: ${{ secrets.RDS_USER }}
-            DB_NAME: ${{ secrets.RDS_DBNAME }}
-            DB_PASSWORD: ${{ secrets.RDS_PASSWORD }} 
-            DB_PORT: ${{ secrets.RDS_PORT }}
-
+        env:
+          DB_HOST: ${{ secrets.RDS_HOST }} 
+          DB_USER: ${{ secrets.RDS_USER }}
+          DB_NAME: ${{ secrets.RDS_DBNAME }}
+          DB_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+          DB_PORT: ${{ secrets.RDS_PORT }}
