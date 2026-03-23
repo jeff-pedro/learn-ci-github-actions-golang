@@ -28,7 +28,7 @@ jobs:
           target: /home/${{ secrets.EC2_USERNAME }}
 
       - name: Executa aplicação
-        run: ./main
+        run: ./main &
         env:
           DB_HOST: ${{ secrets.RDS_HOST }} 
           DB_USER: ${{ secrets.RDS_USER }}
