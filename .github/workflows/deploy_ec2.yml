@@ -1,0 +1,37 @@
+name: Entrega Contínua EC2
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy_ec2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+           go-version: '1.22'
+
+      - name: Build
+        run: go build main.go
+
+      - name: SCP para EC2
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SECRET_KEY }}
+          source: "templates,assets,main"
+          target: /home/${{ secrets.EC2_USERNAME }}
+
+      - name: Executa aplicação
+        run: ./main &
+        env:
+          DB_HOST: ${{ secrets.RDS_HOST }} 
+          DB_USER: ${{ secrets.RDS_USER }}
+          DB_NAME: ${{ secrets.RDS_DBNAME }}
+          DB_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+          DB_PORT: ${{ secrets.RDS_PORT }}
