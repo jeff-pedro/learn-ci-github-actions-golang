@@ -28,9 +28,9 @@ jobs:
           target: /home/${{ secrets.EC2_USERNAME }}
 
       - name: Executa aplicação
-        run: ./main &
+        run: sudo systemctl restart projeto.target
         env:
-          DB_HOST: ${{ secrets.RDS_HOST }} 
+          DB_HOST: ${{ secrets.RDS_HOST }}
           DB_USER: ${{ secrets.RDS_USER }}
           DB_NAME: ${{ secrets.RDS_DBNAME }}
           DB_PASSWORD: ${{ secrets.RDS_PASSWORD }}
