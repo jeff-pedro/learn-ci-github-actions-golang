@@ -42,7 +42,7 @@ jobs:
           envs: DB_HOST,DB_USER,DB_NAME,DB_PASSWORD,DB_PORT
           script: |
             # Cria diretório se não existir
-            sudo mkdir -p /etc/projeto/db.env
+            sudo mkdir -p /etc/projeto
 
             # Adiciona as variáveis no arquivo
             sudo echo "DB_HOST=$DB_HOST" | tee /etc/projeto/db.env > /dev/null
