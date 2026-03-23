@@ -41,5 +41,19 @@ jobs:
           key: ${{ secrets.EC2_SECRET_KEY }}
           envs: DB_HOST,DB_USER,DB_NAME,DB_PASSWORD,DB_PORT
           script: |
+            # Cria diretório se não existir
+            sudo mkdir -p /etc/projeto/db.env
+
+            # Adiciona as variáveis no arquivo
+            sudo echo "DB_HOST=$DB_HOST" | tee /etc/projeto/db.env > /dev/null
+            sudo echo "DB_USER=$DB_USER" | tee -a /etc/projeto/db.env > /dev/null
+            sudo echo "DB_NAME=$DB_NAME" | tee -a /etc/projeto/db.env > /dev/null
+            sudo echo "DB_PASSWORD=$DB_PASSWORD" | tee -a /etc/projeto/db.env > /dev/null
+            sudo echo "DB_PORT=$DB_PORT" | tee -a /etc/projeto/db.env > /dev/null
+
+            # Protege o arquivo
+            sudo chmod 600 /etc/projeto/db.env
+
+            # Reinicia o serviço
             sudo systemctl daemon-reload
             sudo systemctl restart projeto.service

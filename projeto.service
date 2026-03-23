@@ -11,11 +11,7 @@ Restart=always
 RestartSec=0
 StandardOutput=file:/var/log/projeto.out.log
 StandardError=file:/var/log/projeto.err.log
-Environment="DB_HOST=banco-aplicacao.cox0og066tt0.us-east-1.rds.amazonaws.com"
-Environment="DB_USER=postgres"
-Environment="DB_NAME=db_projeto_go"
-Environment="DB_PASSWORD=zOCjnWt1dF7HG3FxvFux"
-Environment="DB_PORT=5432"
+EnvironmentFile=-/etc/projeto/db.env
 
 [Install]
 WantedBy=multi-user.target
