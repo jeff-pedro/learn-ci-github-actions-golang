@@ -1,0 +1,21 @@
+[Unit]
+Description="Meu projeto Go"
+After=network.target
+
+[Service]
+ExecStart=/home/ec2-user/main
+WorkingDirectory=/home/ec2-user
+User=ec2-user
+Group=ec2-user
+Restart=always
+RestartSec=0
+StandardOutput=file:/var/log/projeto.out.log
+StandardError=file:/var/log/projeto.err.log
+Environment="DB_HOST=banco-aplicacao.cox0og066tt0.us-east-1.rds.amazonaws.com"
+Environment="DB_USER=postgres"
+Environment="DB_NAME=db_projeto_go"
+Environment="DB_PASSWORD=zOCjnWt1dF7HG3FxvFux"
+Environment="DB_PORT=5432"
+
+[Install]
+WantedBy=multi-user.target
