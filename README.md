@@ -8,9 +8,12 @@ O arquivo **Makefile** conhecido como solução para automatização de compila�
 # Executa a esteira de CI
 make ci
 
+Executa a esteira de CD
+make cd
+
 # Executa apenas o lint
 make lint
 
 # Executa apenas testes
 make test
-````
+```
