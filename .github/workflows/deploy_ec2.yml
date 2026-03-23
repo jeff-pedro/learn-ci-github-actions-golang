@@ -27,11 +27,19 @@ jobs:
           source: "templates,assets,main"
           target: /home/${{ secrets.EC2_USERNAME }}
 
-      - name: Executa aplicação
-        run: sudo systemctl restart projeto.target
+      - name: Reinicia Projeto Go
+        uses: appleboy/ssh-action@master
         env:
           DB_HOST: ${{ secrets.RDS_HOST }}
           DB_USER: ${{ secrets.RDS_USER }}
           DB_NAME: ${{ secrets.RDS_DBNAME }}
           DB_PASSWORD: ${{ secrets.RDS_PASSWORD }}
           DB_PORT: ${{ secrets.RDS_PORT }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SECRET_KEY }}
+          envs: DB_HOST,DB_USER,DB_NAME,DB_PASSWORD,DB_PORT
+          script: |
+            sudo systemctl daemon-reload
+            sudo systemctl restart projeto.service
