@@ -26,4 +26,13 @@ jobs:
           key: ${{ secrets.EC2_SECRET_KEY }}
           source: "templates,assets,main"
           target: /home/${{ secrets.EC2_USERNAME }}
-      
+
+      - name: Executa aplicação
+        run: ./main
+          environments:
+            DB_HOST=${{ secrets.RDS_HOST }} 
+            DB_USER=${{ secrets.RDS_USER }}
+            DB_NAM=${{ secrets.RDS_DBNAME }}
+            DB_PASSWORD=${{ secrets.RDS_PASSWORD }} 
+            DB_PORT=${{ secrets.RDS_PORT }}
+
