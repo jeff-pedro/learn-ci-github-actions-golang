@@ -3,6 +3,8 @@ name: Construção do Artefato
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+
   workflow_dispatch:
 
 jobs:
@@ -23,5 +25,6 @@ jobs:
       - name: Constrói e envia imagem
         uses: docker/build-push-action@v3
         with:
+          context: .
           push: true
-          tags: jeffersonps/projeto_go:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/projeto_go:latest
