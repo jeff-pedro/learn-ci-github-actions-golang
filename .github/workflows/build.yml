@@ -17,8 +17,8 @@ jobs:
       - name: Docker login
         uses: docker/login-action@v3
         with:
-          username: jeffersonps
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Constrói e envia imagem
         uses: docker/build-push-action@v3
