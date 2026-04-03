@@ -21,7 +21,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
       - name: Constrói e envia imagem
-        uses: docke/build-push-action@v3
+        uses: docker/build-push-action@v3
         with:
           push: true
           tags: jeffersonps/projeto_go:latest
