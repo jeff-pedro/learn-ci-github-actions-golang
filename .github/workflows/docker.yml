@@ -30,4 +30,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/projeto_go:${{ github.ref_name }}
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/projeto_go:${{ github.sha }}
