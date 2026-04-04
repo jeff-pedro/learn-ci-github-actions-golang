@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SECRET_KEY }}
           source: "projeto.service"
-          target: /lib/systemd/system/api-go.service
+          target: /home/${{ secrets.EC2_USERNAME }}/api-go.service
 
       - name: Reinicia Projeto Go
         uses: appleboy/ssh-action@master
@@ -53,6 +53,9 @@ jobs:
           key: ${{ secrets.EC2_SECRET_KEY }}
           envs: DB_HOST,DB_USER,DB_NAME,DB_PASSWORD,DB_PORT
           script: |
+
+            # Copia arquivo de serviço
+            sudo cp /home/$DB_USER/api-go.service /lib/systemd/system
 
             # Cria diretório se não existir
             sudo mkdir -p /etc/api-go
