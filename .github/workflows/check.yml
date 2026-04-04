@@ -1,12 +1,16 @@
 name: Verificações do Código
 
-on:
-  pull_request:
-    branches: [ "main" ]
+# on:
+#   pull_request:
+#     branches: [ "main" ]
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        go_version: ['1.22']
+        os: [ 'ubuntu-latest']
     environment: ci
     steps:
       - uses: actions/checkout@v4
@@ -14,7 +18,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-           go-version: '1.22'
+           go-version: ${{ matrix.go_version }}
       
       - name: Inicia Banco
         run: docker compose up -d postgres
