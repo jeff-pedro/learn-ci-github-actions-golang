@@ -9,9 +9,9 @@ User=ec2-user
 Group=ec2-user
 Restart=always
 RestartSec=0
-StandardOutput=file:/var/log/projeto.out.log
-StandardError=file:/var/log/projeto.err.log
-EnvironmentFile=-/etc/projeto/db.env
+StandardOutput=file:/var/log/api-go.out.log
+StandardError=file:/var/log/api-go.err.log
+EnvironmentFile=-/etc/api-go/db.env
 
 [Install]
 WantedBy=multi-user.target
