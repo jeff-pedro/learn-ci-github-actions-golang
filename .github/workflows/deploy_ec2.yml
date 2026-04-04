@@ -1,12 +1,11 @@
 name: Entrega Contínua EC2
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_call:
 
 jobs:
 
-  deploy_ec2:
+  deploy:
     runs-on: ubuntu-latest
     environment: prod
     steps:

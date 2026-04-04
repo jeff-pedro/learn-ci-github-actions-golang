@@ -1,6 +1,6 @@
 name: Construção do Artefato
 
-on:
+on: 
   pull_request:
   # push:
   #   branches: [ "main" ]
@@ -34,3 +34,9 @@ jobs:
     needs: build
     uses: ./.github/workflows/docker.yml
     secrets: inherit
+
+  deploy_ec2:
+    needs: build
+    uses: ./.github/workflows/deploy_ec2.yml
+    secrets: inherit
+
