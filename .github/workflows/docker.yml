@@ -1,13 +1,19 @@
-name: Imagem Docker
+name: Docker
 
 on:
   workflow_call:
     
 jobs:
+  
   docker:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Download do artefato
+        uses: actions/download-artifact@v4
+        with:
+          name: programa
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -18,15 +24,10 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Download do artefato
-        uses: actions/download-artifact@v4
-        with:
-          name: programa
-
-
       - name: Constrói e envia imagem
         uses: docker/build-push-action@v3
         with:
           context: .
+          file: ./Dockerfile
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/projeto_go:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/projeto_go:${{ github.ref_name }}
