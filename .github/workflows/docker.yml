@@ -18,6 +18,12 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Download do artefato
+        uses: actions/download-artifact@v4
+        with:
+          name: programa
+
+
       - name: Constrói e envia imagem
         uses: docker/build-push-action@v3
         with:
