@@ -5,7 +5,7 @@ on:
 
 jobs:
 
-  deploy:
+  ec2:
     runs-on: ubuntu-latest
     environment: prod
     steps:
@@ -30,6 +30,15 @@ jobs:
           source: "templates,assets,main"
           target: /home/${{ secrets.EC2_USERNAME }}
 
+      - name: Copia Serviço para EC2
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SECRET_KEY }}
+          source: "projeto.service"
+          target: /lib/systemd/system/api-go.service
+
       - name: Reinicia Projeto Go
         uses: appleboy/ssh-action@master
         env:
@@ -44,19 +53,21 @@ jobs:
           key: ${{ secrets.EC2_SECRET_KEY }}
           envs: DB_HOST,DB_USER,DB_NAME,DB_PASSWORD,DB_PORT
           script: |
+
             # Cria diretório se não existir
-            sudo mkdir -p /etc/projeto
+            sudo mkdir -p /etc/api-go
 
             # Adiciona as variáveis no arquivo
-            sudo echo "DB_HOST=$DB_HOST" | sudo tee /etc/projeto/db.env > /dev/null
-            sudo echo "DB_USER=$DB_USER" | sudo tee -a /etc/projeto/db.env > /dev/null
-            sudo echo "DB_NAME=$DB_NAME" | sudo tee -a /etc/projeto/db.env > /dev/null
-            sudo echo "DB_PASSWORD=$DB_PASSWORD" | sudo tee -a /etc/projeto/db.env > /dev/null
-            sudo echo "DB_PORT=$DB_PORT" | sudo tee -a /etc/projeto/db.env > /dev/null
+            sudo echo "DB_HOST=$DB_HOST" | sudo tee /etc/api-go/db.env > /dev/null
+            sudo echo "DB_USER=$DB_USER" | sudo tee -a /etc/api-go/db.env > /dev/null
+            sudo echo "DB_NAME=$DB_NAME" | sudo tee -a /etc/api-go/db.env > /dev/null
+            sudo echo "DB_PASSWORD=$DB_PASSWORD" | sudo tee -a /etc/api-go/db.env > /dev/null
+            sudo echo "DB_PORT=$DB_PORT" | sudo tee -a /etc/api-go/db.env > /dev/null
 
             # Protege o arquivo
-            sudo chmod 600 /etc/projeto/db.env
+            sudo chmod 600 /etc/api-go/db.env
 
-            # Reinicia o serviço
+            # Habilita e Reinicia o serviço
+            sudo systemctl enable api-go.service
             sudo systemctl daemon-reload
-            sudo systemctl restart projeto.service
+            sudo systemctl restart api-go.service
