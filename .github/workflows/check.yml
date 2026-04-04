@@ -5,6 +5,7 @@ name: Verificações do Código
 #     branches: [ "main" ]
 
 jobs:
+
   check:
     runs-on: ${{ matrix.os }}
     strategy:

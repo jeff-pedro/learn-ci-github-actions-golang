@@ -5,6 +5,7 @@ name: Entrega Contínua EC2
 #     branches: [ "main" ]
 
 jobs:
+
   deploy_ec2:
     runs-on: ubuntu-latest
     environment: prod
@@ -16,8 +17,10 @@ jobs:
         with:
            go-version: '1.22'
 
-      - name: Build
-        run: go build main.go
+      - name: Download do artefato
+        uses: actions/download-artifact@v4
+        with:
+          name: programa
 
       - name: SCP para EC2
         uses: appleboy/scp-action@v1
