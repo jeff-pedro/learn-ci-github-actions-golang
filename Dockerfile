@@ -1,4 +1,9 @@
-FROM golang:1.22-alpine
+FROM ubuntu:latest
+
+EXPOSE 8000
+
 WORKDIR /app
-COPY . .
-RUN ./main
+
+COPY ./main .
+
+CMD [ "./main" ]
