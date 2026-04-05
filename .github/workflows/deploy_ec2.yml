@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SECRET_KEY }}
           source: "projeto.service"
-          target: /home/${{ secrets.EC2_USERNAME }}/api-go.service
+          target: /home/${{ secrets.EC2_USERNAME }}
 
       - name: Reinicia Projeto Go
         uses: appleboy/ssh-action@master
