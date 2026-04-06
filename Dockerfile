@@ -1,4 +1,9 @@
-FROM golang:1.22
+FROM ubuntu:latest
+
+EXPOSE 8000
+
 WORKDIR /app
-COPY . .
-ENTRYPOINT ["go", "run", "main.go"]
+
+COPY ./main .
+
+CMD [ "./main" ]

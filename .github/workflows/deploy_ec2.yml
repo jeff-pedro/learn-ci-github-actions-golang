@@ -1,11 +1,11 @@
 name: Entrega Contínua EC2
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_call:
 
 jobs:
-  deploy_ec2:
+
+  ec2:
     runs-on: ubuntu-latest
     environment: prod
     steps:
@@ -16,8 +16,10 @@ jobs:
         with:
            go-version: '1.22'
 
-      - name: Build
-        run: go build main.go
+      - name: Download do artefato
+        uses: actions/download-artifact@v4
+        with:
+          name: programa
 
       - name: SCP para EC2
         uses: appleboy/scp-action@v1
@@ -25,7 +27,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SECRET_KEY }}
-          source: "templates,assets,main"
+          source: "templates,assets,api-go.service,main"
           target: /home/${{ secrets.EC2_USERNAME }}
 
       - name: Reinicia Projeto Go
@@ -36,25 +38,39 @@ jobs:
           DB_NAME: ${{ secrets.RDS_DBNAME }}
           DB_PASSWORD: ${{ secrets.RDS_PASSWORD }}
           DB_PORT: ${{ secrets.RDS_PORT }}
+          EC2_USER: ${{ secrets.EC2_USERNAME }} 
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SECRET_KEY }}
-          envs: DB_HOST,DB_USER,DB_NAME,DB_PASSWORD,DB_PORT
+          envs: DB_HOST,DB_USER,DB_NAME,DB_PASSWORD,DB_PORT,EC2_USER
           script: |
-            # Cria diretório se não existir
-            sudo mkdir -p /etc/projeto
 
-            # Adiciona as variáveis no arquivo
-            sudo echo "DB_HOST=$DB_HOST" | sudo tee /etc/projeto/db.env > /dev/null
-            sudo echo "DB_USER=$DB_USER" | sudo tee -a /etc/projeto/db.env > /dev/null
-            sudo echo "DB_NAME=$DB_NAME" | sudo tee -a /etc/projeto/db.env > /dev/null
-            sudo echo "DB_PASSWORD=$DB_PASSWORD" | sudo tee -a /etc/projeto/db.env > /dev/null
-            sudo echo "DB_PORT=$DB_PORT" | sudo tee -a /etc/projeto/db.env > /dev/null
+            # Copia arquivo de serviço
+            sudo cp /home/$EC2_USER/api-go.service /lib/systemd/system
 
-            # Protege o arquivo
-            sudo chmod 600 /etc/projeto/db.env
+            # Cria arquivos de log
+            sudo touch /var/log/api-go.out.log /var/log/api-go.err.log
+            sudo chown $EC2_USER:$EC2_USER /var/log/api-go.out.log /var/log/api-go.err.log
 
-            # Reinicia o serviço
+            # Cria diretório para as envs se não existir
+            sudo mkdir -p /etc/api-go
+
+            # Adiciona as variáveis de ambiente em arquivo
+            sudo echo "DB_HOST=$DB_HOST" | sudo tee /etc/api-go/db.env > /dev/null
+            sudo echo "DB_USER=$DB_USER" | sudo tee -a /etc/api-go/db.env > /dev/null
+            sudo echo "DB_NAME=$DB_NAME" | sudo tee -a /etc/api-go/db.env > /dev/null
+            sudo echo "DB_PASSWORD=$DB_PASSWORD" | sudo tee -a /etc/api-go/db.env > /dev/null
+            sudo echo "DB_PORT=$DB_PORT" | sudo tee -a /etc/api-go/db.env > /dev/null
+
+            # Protege o arquivo de env
+            sudo chmod 600 /etc/api-go/db.env
+            sudo chown $EC2_USER:$EC2_USER /etc/api-go/db.env
+
+            # Permissao no arquivo main
+            sudo chmod +x main  
+
+            # Habilita e Reinicia o serviço
             sudo systemctl daemon-reload
-            sudo systemctl restart projeto.service
+            sudo systemctl enable api-go.service
+            sudo systemctl restart api-go.service
