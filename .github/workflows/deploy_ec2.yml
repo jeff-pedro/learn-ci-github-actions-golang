@@ -48,22 +48,29 @@ jobs:
 
             # Copia arquivo de serviço
             sudo cp /home/$EC2_USER/api-go.service /lib/systemd/system
-            echo 
 
-            # Cria diretório se não existir
+            # Cria arquivos de log
+            sudo touch /var/log/api-go.out.log /var/log/api-go.err.log
+            sudo chown $EC2_USER:$EC2_USER /var/log/api-go.out.log /var/log/api-go.err.log
+
+            # Cria diretório para as envs se não existir
             sudo mkdir -p /etc/api-go
 
-            # Adiciona as variáveis no arquivo
+            # Adiciona as variáveis de ambiente em arquivo
             sudo echo "DB_HOST=$DB_HOST" | sudo tee /etc/api-go/db.env > /dev/null
             sudo echo "DB_USER=$DB_USER" | sudo tee -a /etc/api-go/db.env > /dev/null
             sudo echo "DB_NAME=$DB_NAME" | sudo tee -a /etc/api-go/db.env > /dev/null
             sudo echo "DB_PASSWORD=$DB_PASSWORD" | sudo tee -a /etc/api-go/db.env > /dev/null
             sudo echo "DB_PORT=$DB_PORT" | sudo tee -a /etc/api-go/db.env > /dev/null
 
-            # Protege o arquivo
+            # Protege o arquivo de env
             sudo chmod 600 /etc/api-go/db.env
+            sudo chown $EC2_USER:$EC2_USER /etc/api-go/db.env
+
+            # Permissao no arquivo main
+            sudo chmod +x main  
 
             # Habilita e Reinicia o serviço
-            sudo systemctl enable api-go.service
             sudo systemctl daemon-reload
+            sudo systemctl enable api-go.service
             sudo systemctl restart api-go.service
